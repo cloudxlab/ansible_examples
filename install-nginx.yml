@@ -1,0 +1,4 @@
+- hosts: "{{ variable_host | default('node1') }}"
+  become: true
+  roles:
+    - nginxinc.nginx

@@ -1,0 +1,6 @@
+---
+# tasks file for deploy-flaskapp
+- import_tasks: install.yml
+- import_tasks: service.yml
+- import_tasks: dep-flaskapp.yml
+

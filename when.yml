@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Debug msg
+    debug:
+      msg: "Installing docker here"
+  - name: Install docker on Redhat
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'RedHat'
+  - name: Install docker on Debian
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'Debian'
+  - name: Start docker service
+    service: name=docker state=restarted
+  - name: Start flask app on port 80
+    shell:
+      cmd: docker run -dit -p 80:4080 ashok25/flaskapp:v2.0
+  - name: Get service running on port 80
+    shell: netstat -tunlp | grep ":80 "
+    register: results
+  - name: See what netstat returned
+    debug: var=results
+

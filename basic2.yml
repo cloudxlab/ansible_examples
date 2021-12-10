@@ -1,0 +1,16 @@
+- name: Install and start docker
+  hosts: all
+  become: true
+  tasks:
+    - name: Debug msg
+      debug:
+        msg: "Installing docker here"
+    - name: Install docker
+      apt: name=docker.io state=latest
+    - name: Start docker service
+      service: name=docker state=started
+    - name: Start flask app on port 80
+      shell:
+        cmd: docker run -dit -p 80:4080 ashok25/flaskapp:v2.0
+
+

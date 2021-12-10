@@ -1,0 +1,9 @@
+---
+  - name: Install docker
+    apt:
+      name: docker.io
+      state: latest
+    notify:
+      - restart all 
+
+

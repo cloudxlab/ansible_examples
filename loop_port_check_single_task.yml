@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Debug msg
+    debug:
+      msg: "Installing docker here"
+
+  - name: Install docker on Redhat
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'RedHat'
+
+  - name: Install docker on Debian
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'Debian'
+
+  - name: Start docker service
+    service: name=docker state=started
+  
+  - name: Check and start containers on multiple ports
+    shell:
+      cmd: docker run -dit -p '{{ item }}':4080 ashok25/flaskapp:v2.0
+
+    loop:
+      - 80
+      - 81
+      - 82 

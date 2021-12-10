@@ -1,0 +1,23 @@
+- name: Install dokcer and restart docker and container
+  hosts: all
+  become: true
+  tasks:
+    - name: Debug msg
+      debug:
+        msg: "Installing docker here"
+    - name: Install docker
+      apt:
+        name: docker.io
+        state: latest
+      notify:
+        - restart docker
+        - restart container
+  handlers:
+    - name: restart docker
+      service:
+         name=docker state=restarted
+    - name: restart container
+      shell:
+        cmd: docker run -dit -p 80:4080 ashok25/flaskapp:v2.0
+
+

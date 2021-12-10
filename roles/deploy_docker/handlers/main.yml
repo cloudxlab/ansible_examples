@@ -1,0 +1,13 @@
+- name: restart docker
+  service:
+    name:
+      docker
+    state:
+      restarted
+  listen: "restart all"
+- name: restart container
+  shell:
+    cmd: docker run -dit -p 80:4080 ashok25/flaskapp:v2.0
+  listen: "restart all"
+
+

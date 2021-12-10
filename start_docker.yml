@@ -1,0 +1,22 @@
+---
+- name: Check port listening "{{ port }}"
+  wait_for:
+    port: "{{ port }}"
+    delay: 5
+    timeout: 10
+    msg: "Timeout for port {{ port }}"
+  register: port_check
+  ignore_errors: yes
+
+- name: Start flask app on port '{{ port }}'
+  shell:
+    cmd: docker run -dit -p '{{ port }}':4080 ashok25/flaskapp:v2.0
+  when: port_check.failed == true
+
+- name: Get service running on port '{{ port }}'
+  shell: netstat -tunlp | grep ":{{ port }}"
+  register: results
+
+- name: See what netstat returned
+  debug: var=results
+

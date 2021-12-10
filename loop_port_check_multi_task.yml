@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+  - name: Setting ports list
+    set_fact:
+      ports:
+        - 80
+        - 81
+        - 82
+  - name: Debug msg
+    debug:
+      msg: "Installing docker here"
+  - name: Install docker on Redhat
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'RedHat'
+
+  - name: Install docker on Debian
+    apt: name=docker.io state=latest
+    when: ansible_os_family == 'Debian'
+
+  - name: Start docker service
+    service: name=docker state=started
+
+  - name: Starting docker on ports
+    include_tasks: start_docker.yml
+    loop: "{{ ports }}"
+    loop_control:
+      loop_var: port
